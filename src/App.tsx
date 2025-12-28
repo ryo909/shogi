@@ -37,32 +37,28 @@ function App() {
     setGameState({ ...gameInstance.state });
   };
 
-  // AI Turn Handling
+  // AI Turn Handling - Use polling for reliability
   useEffect(() => {
-    // Only trigger AI after card selection is complete
-    if (cardSelectionPlayer !== null) return;
     if (gameMode !== 'PvEA') return;
+    if (cardSelectionPlayer !== null) return;
 
-    // Use gameInstance.state directly for consistency
-    const currentState = gameInstance.state;
-    if (currentState.turn !== 'gote') return;
-    if (currentState.winner) return;
+    const interval = setInterval(() => {
+      const state = gameInstance.state;
 
-    // AI Turn
-    const timer = setTimeout(() => {
-      // Double-check turn before executing (in case of race condition)
-      if (gameInstance.state.turn !== 'gote') return;
-
-      const bestMove = getBestMove(gameInstance, 'gote');
-      if (bestMove) {
-        gameInstance.state = gameInstance.applyMove(gameInstance.state, bestMove);
-        setGameState({ ...gameInstance.state });
-      } else {
-        console.log("AI has no moves - Resigns");
+      // Check if it's AI's turn and game is not over
+      if (state.turn === 'gote' && !state.winner) {
+        const bestMove = getBestMove(gameInstance, 'gote');
+        if (bestMove) {
+          gameInstance.state = gameInstance.applyMove(gameInstance.state, bestMove);
+          setGameState({ ...gameInstance.state });
+        } else {
+          console.log("AI has no moves");
+        }
       }
-    }, 800);
-    return () => clearTimeout(timer);
-  }, [gameState.ply, gameMode, cardSelectionPlayer]);
+    }, 1000); // Check every second
+
+    return () => clearInterval(interval);
+  }, [gameMode, cardSelectionPlayer]);
 
   const handleCardSelect = (card: TrumpCardData) => {
     if (!cardSelectionPlayer) return;
