@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef, type FC } from 'react';
 import type { MoveRecord } from '../game/types';
 import { PIECE_NAMES } from '../game/constants';
 import styles from './GameLog.module.css';
@@ -7,7 +7,7 @@ interface GameLogProps {
     history: MoveRecord[];
 }
 
-export const GameLog: React.FC<GameLogProps> = ({ history }) => {
+export const GameLog: FC<GameLogProps> = ({ history }) => {
     const scrollRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {

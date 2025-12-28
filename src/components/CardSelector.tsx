@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, type FC } from 'react';
 import type { TrumpCardData } from '../game/data';
 import { TRUMP_CARDS } from '../game/data';
 import type { Player } from '../game/types';
@@ -9,7 +9,7 @@ interface CardSelectorProps {
     onSelect: (card: TrumpCardData) => void;
 }
 
-export const CardSelector: React.FC<CardSelectorProps> = ({ player, onSelect }) => {
+export const CardSelector: FC<CardSelectorProps> = ({ player, onSelect }) => {
     // Generate candidates once
     const [candidates] = useState<TrumpCardData[]>(() => {
         // One from each category

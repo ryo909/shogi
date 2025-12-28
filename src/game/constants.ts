@@ -1,4 +1,4 @@
-import type { BoardState, PieceType, Player } from './types';
+import type { PieceType, Player } from './types';
 
 export const BOARD_SIZE = 9;
 

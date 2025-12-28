@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import type { BoardState, MoveRecord, Position } from '../game/types';
 import { ShogiGame } from '../game/shogi';
 import { PieceComponent } from './Piece';
@@ -14,7 +14,7 @@ interface BoardProps {
     lastMove?: MoveRecord;
 }
 
-export const Board: React.FC<BoardProps> = ({ game, board, selectedPos, validMoves, onSquareClick, lastMove }) => {
+export const Board: FC<BoardProps> = ({ board, selectedPos, validMoves, onSquareClick, lastMove }) => {
     // Helper to check if a position is in validMoves
     const isValidTarget = (x: number, y: number) => {
         return validMoves.some(m => !m.drop && m.to.x === x && m.to.y === y);

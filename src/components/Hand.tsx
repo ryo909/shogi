@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import type { Hand as HandType, Player, PieceType } from '../game/types';
 import { PieceComponent } from './Piece';
 import styles from './Hand.module.css';
@@ -11,7 +11,7 @@ interface HandProps {
     selectedPiece?: PieceType | null;
 }
 
-export const Hand: React.FC<HandProps> = ({ player, hand, isTurn, onPieceClick, selectedPiece }) => {
+export const Hand: FC<HandProps> = ({ player, hand, isTurn, onPieceClick, selectedPiece }) => {
     // Define order of pieces
     const order: PieceType[] = ['R', 'B', 'G', 'S', 'N', 'L', 'P'];
 

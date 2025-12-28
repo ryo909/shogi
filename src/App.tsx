@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import './App.css';
 import { ShogiGame } from './game/shogi';
 import type { GameState, MoveRecord, PieceType, Player, Position } from './game/types';
@@ -142,7 +142,7 @@ function App() {
       const targetDef = card.targeting.targets ? card.targeting.targets[0] : null; // Assume 1 target for these
 
       const targetPiece = gameInstance.getPiece(pos);
-      let isValid = true;
+      // let isValid = true;
 
       if (targetDef) {
         if (targetDef.type === 'SQUARE_EMPTY' || targetDef.type === 'SQUARE_EMPTY_OWN_TERRITORY') {

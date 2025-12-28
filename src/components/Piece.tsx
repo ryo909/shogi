@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import type { Piece, PieceType } from '../game/types';
 import { PIECE_NAMES } from '../game/constants';
 import styles from './Piece.module.css';
@@ -11,9 +11,9 @@ interface PieceProps {
 }
 
 // Map for simplified Kanji or standard
-export const PieceComponent: React.FC<PieceProps> = ({ piece, isUpsideDown, onClick, isSelected }) => {
+export const PieceComponent: FC<PieceProps> = ({ piece, isUpsideDown, onClick, isSelected }) => {
     const isPromoted = piece.type.startsWith('+');
-    const baseType = isPromoted ? piece.type.substring(1) : piece.type;
+    // const baseType = isPromoted ? piece.type.substring(1) : piece.type;
 
     // Sente is bottom, Gote is Top. Gote should be upside down visually if we are sitting at Sente.
     // Standard Shogi apps just rotate 180 deg for Gote.

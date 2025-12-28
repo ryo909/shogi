@@ -1,0 +1,1 @@
+src/game/constants.ts(1,15): error TS6196: 'BoardState' is declared but never used.

@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FC } from 'react';
 import type { GameState } from '../game/types';
 import { TRUMP_CARDS, EVENTS } from '../game/data';
 import styles from './GameInfo.module.css';
@@ -8,7 +8,7 @@ interface GameInfoProps {
     onUseTrump?: () => void;
 }
 
-export const GameInfo: React.FC<GameInfoProps> = ({ state, onUseTrump }) => {
+export const GameInfo: FC<GameInfoProps> = ({ state, onUseTrump }) => {
     const isSente = state.turn === 'sente';
 
     // Lookup cards
