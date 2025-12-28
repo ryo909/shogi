@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import { ShogiGame } from './game/shogi';
 import type { GameState, MoveRecord, PieceType, Player, Position } from './game/types';
@@ -28,10 +28,34 @@ function App() {
   const [activeTrumpId, setActiveTrumpId] = useState<string | null>(null);
   const [trumpTargets, setTrumpTargets] = useState<Position[]>([]);
 
+  // Game Mode State
+  const [gameMode, setGameMode] = useState<'PvP' | 'PvEA' | null>(null); // null = Title Screen
+
   // Update logic helper
   const updateState = () => {
     setGameState({ ...gameInstance.state });
   };
+
+  // AI Turn Handling
+  useEffect(() => {
+    if (gameMode === 'PvEA' && gameState.turn === 'gote' && !gameState.winner) {
+      // AI Turn
+      const timer = setTimeout(() => {
+        // Simple AI Logic
+        import('./game/ai').then(({ getBestMove }) => {
+          const bestMove = getBestMove(gameInstance, 'gote');
+          if (bestMove) {
+            gameInstance.state = gameInstance.applyMove(gameInstance.state, bestMove);
+            updateState();
+          } else {
+            // Resign or stuck?
+            console.log("AI Resigns");
+          }
+        });
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [gameState.turn, gameMode, gameState.winner]);
 
   const handleCardSelect = (card: TrumpCardData) => {
     if (!cardSelectionPlayer) return;
@@ -41,7 +65,21 @@ function App() {
 
     // Next player or Finish
     if (cardSelectionPlayer === 'sente') {
-      setCardSelectionPlayer('gote');
+      if (gameMode === 'PvEA') {
+        // CPU auto-selects card
+        // Randomly pick one for Gote
+        const tactics = TRUMP_CARDS.filter(c => c.category === 'TACTICS');
+        const support = TRUMP_CARDS.filter(c => c.category === 'SUPPORT');
+        const hype = TRUMP_CARDS.filter(c => c.category === 'HYPE');
+        const all = [...tactics, ...support, ...hype];
+        const randomCard = all[Math.floor(Math.random() * all.length)];
+        gameInstance.state.trumpCards['gote'].chosenCardId = randomCard.id;
+
+        setCardSelectionPlayer(null); // Finish
+        updateState();
+      } else {
+        setCardSelectionPlayer('gote');
+      }
     } else {
       setCardSelectionPlayer(null); // Finish selection
       updateState();
@@ -51,6 +89,10 @@ function App() {
   const onUseTrump = () => {
     // Get current player's card
     const player = gameState.turn;
+
+    // Block Human using Trump on AI turn
+    if (gameMode === 'PvEA' && player === 'gote') return;
+
     const cardId = gameState.trumpCards[player].chosenCardId;
     if (!cardId || gameState.trumpCards[player].used) return;
 
@@ -73,6 +115,9 @@ function App() {
 
   // Handle Board Click
   const onSquareClick = (pos: Position) => {
+    // Block input during AI turn
+    if (gameMode === 'PvEA' && gameState.turn === 'gote') return;
+
     const { x, y } = pos;
     // const isSente = gameState.turn === 'sente'; 
 
@@ -251,6 +296,9 @@ function App() {
   };
 
   const onHandPieceClick = (type: PieceType, player: Player) => {
+    // Block input during AI turn
+    if (gameMode === 'PvEA' && gameState.turn === 'gote') return;
+
     if (player !== gameState.turn) return;
 
     // Toggle
@@ -268,7 +316,46 @@ function App() {
 
   return (
     <div className="app-container">
-      {cardSelectionPlayer && <CardSelector player={cardSelectionPlayer} onSelect={handleCardSelect} />}
+      {/* Title Screen / Mode Selection */}
+      {!gameMode && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.9)',
+          display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
+          zIndex: 2000, color: 'white'
+        }}>
+          <h1 style={{ fontSize: '4rem', marginBottom: '40px', color: '#ffd700', textShadow: '0 0 20px #ffd700' }}>TRUMP SHOGI</h1>
+          <div style={{ display: 'flex', gap: '20px' }}>
+            <button
+              onClick={() => setGameMode('PvEA')}
+              style={{
+                padding: '20px 40px', fontSize: '1.5rem',
+                background: 'linear-gradient(135deg, #ffd700, #b8860b)',
+                border: 'none', borderRadius: '12px', cursor: 'pointer',
+                color: 'black', fontWeight: 'bold'
+              }}
+            >
+              VS CPU
+            </button>
+            <button
+              onClick={() => setGameMode('PvP')}
+              style={{
+                padding: '20px 40px', fontSize: '1.5rem',
+                background: 'rgba(255,255,255,0.1)',
+                border: '2px solid #ffd700', borderRadius: '12px', cursor: 'pointer',
+                color: '#ffd700', fontWeight: 'bold'
+              }}
+            >
+              VS HUMAN
+            </button>
+          </div>
+        </div>
+      )}
+
+      {cardSelectionPlayer && (gameMode === 'PvP' || (gameMode === 'PvEA' && cardSelectionPlayer === 'sente')) &&
+        <CardSelector player={cardSelectionPlayer} onSelect={handleCardSelect} />
+      }
 
       <GameInfo state={gameState} onUseTrump={onUseTrump} />
 
