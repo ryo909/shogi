@@ -1,0 +1,67 @@
+.piece {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  font-family: var(--font-main);
+  font-weight: bold;
+  position: relative;
+  transition: transform 0.2s;
+}
+
+.inner {
+  width: 92%;
+  height: 92%;
+
+  /* Obsidian/Dark Stone Look */
+  background: linear-gradient(135deg, #2a2a3a, #1a1a25);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+
+  /* Shape */
+  clip-path: polygon(50% 0%, 100% 25%, 82% 100%, 18% 100%, 0% 25%);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Text */
+  font-size: 1.4rem;
+  color: var(--accent-gold);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+
+  box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.4);
+
+  transition: all 0.2s;
+}
+
+/* Hover Effect */
+.piece:hover .inner {
+  background: linear-gradient(135deg, #3a3a4a, #2a2a35);
+  border-color: var(--accent-gold);
+}
+
+/* Gote (Top) pieces */
+.isGote {
+  transform: rotate(180deg);
+}
+
+/* Promoted */
+.promoted .inner {
+  color: var(--accent-red);
+  text-shadow: 0 0 5px rgba(255, 68, 68, 0.4);
+  border-color: rgba(255, 68, 68, 0.3);
+}
+
+/* Selected */
+.selected .inner {
+  background: linear-gradient(135deg, #3a3a3a, #4a4a4a);
+  box-shadow: 0 0 15px var(--accent-gold-glow);
+  transform: scale(1.05);
+  /* slightly bigger */
+  border-color: var(--accent-gold);
+  z-index: 10;
+}

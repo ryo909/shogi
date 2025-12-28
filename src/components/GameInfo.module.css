@@ -1,0 +1,111 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1.5rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--accent-gold);
+    box-shadow: var(--glass-shadow);
+    color: var(--text-primary);
+    min-height: 70px;
+    border-radius: 0 0 16px 16px;
+    margin-bottom: 1rem;
+}
+
+.playerSection {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    flex: 1;
+}
+
+.playerSection.right {
+    justify-content: flex-end;
+    text-align: right;
+}
+
+.playerName {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--text-secondary);
+    transition: all 0.3s;
+    font-family: var(--font-main);
+}
+
+.activePlayer {
+    color: var(--accent-gold);
+    text-shadow: 0 0 8px var(--accent-gold-glow);
+    transform: scale(1.05);
+}
+
+.cardInfo {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    background: rgba(0, 0, 0, 0.2);
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.useBtn {
+    background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dim));
+    color: #000;
+    border: none;
+    font-size: 0.8rem;
+    margin-left: 0.5rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.useBtn:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4), 0 0 10px var(--accent-gold-glow);
+}
+
+.centerInfo {
+    text-align: center;
+    font-size: 0.9rem;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    min-width: 200px;
+}
+
+.plyCount {
+    font-family: var(--font-ui);
+    color: var(--text-secondary);
+    margin-bottom: 0.3rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.activeEvent {
+    color: var(--accent-red);
+    font-weight: bold;
+    animation: pulse 2s infinite ease-in-out;
+}
+
+.previewEvents {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    margin-top: 0.3rem;
+    opacity: 0.8;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.8;
+        text-shadow: 0 0 0 transparent;
+    }
+
+    50% {
+        opacity: 1;
+        text-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+    }
+
+    100% {
+        opacity: 0.8;
+        text-shadow: 0 0 0 transparent;
+    }
+}
