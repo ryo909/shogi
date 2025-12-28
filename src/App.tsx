@@ -38,6 +38,9 @@ function App() {
 
   // AI Turn Handling
   useEffect(() => {
+    // Only trigger AI after card selection is complete
+    if (cardSelectionPlayer !== null) return;
+
     if (gameMode === 'PvEA' && gameState.turn === 'gote' && !gameState.winner) {
       // AI Turn
       const timer = setTimeout(() => {
@@ -55,7 +58,7 @@ function App() {
       }, 1000);
       return () => clearTimeout(timer);
     }
-  }, [gameState.turn, gameMode, gameState.winner]);
+  }, [gameState, gameMode, cardSelectionPlayer]);
 
   const handleCardSelect = (card: TrumpCardData) => {
     if (!cardSelectionPlayer) return;
