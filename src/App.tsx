@@ -42,17 +42,23 @@ function App() {
     // Only trigger AI after card selection is complete
     if (cardSelectionPlayer !== null) return;
     if (gameMode !== 'PvEA') return;
-    if (gameState.turn !== 'gote') return;
-    if (gameState.winner) return;
+
+    // Use gameInstance.state directly for consistency
+    const currentState = gameInstance.state;
+    if (currentState.turn !== 'gote') return;
+    if (currentState.winner) return;
 
     // AI Turn
     const timer = setTimeout(() => {
+      // Double-check turn before executing (in case of race condition)
+      if (gameInstance.state.turn !== 'gote') return;
+
       const bestMove = getBestMove(gameInstance, 'gote');
       if (bestMove) {
         gameInstance.state = gameInstance.applyMove(gameInstance.state, bestMove);
         setGameState({ ...gameInstance.state });
       } else {
-        console.log("AI Resigns");
+        console.log("AI has no moves - Resigns");
       }
     }, 800);
     return () => clearTimeout(timer);
