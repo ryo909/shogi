@@ -10,6 +10,7 @@ import { GameLog } from './components/GameLog';
 import { CardSelector } from './components/CardSelector';
 import type { TrumpCardData } from './game/data';
 import { TRUMP_CARDS } from './game/data';
+import { getBestMove } from './game/ai';
 
 const gameInstance = new ShogiGame();
 
@@ -40,25 +41,22 @@ function App() {
   useEffect(() => {
     // Only trigger AI after card selection is complete
     if (cardSelectionPlayer !== null) return;
+    if (gameMode !== 'PvEA') return;
+    if (gameState.turn !== 'gote') return;
+    if (gameState.winner) return;
 
-    if (gameMode === 'PvEA' && gameState.turn === 'gote' && !gameState.winner) {
-      // AI Turn
-      const timer = setTimeout(() => {
-        // Simple AI Logic
-        import('./game/ai').then(({ getBestMove }) => {
-          const bestMove = getBestMove(gameInstance, 'gote');
-          if (bestMove) {
-            gameInstance.state = gameInstance.applyMove(gameInstance.state, bestMove);
-            updateState();
-          } else {
-            // Resign or stuck?
-            console.log("AI Resigns");
-          }
-        });
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [gameState, gameMode, cardSelectionPlayer]);
+    // AI Turn
+    const timer = setTimeout(() => {
+      const bestMove = getBestMove(gameInstance, 'gote');
+      if (bestMove) {
+        gameInstance.state = gameInstance.applyMove(gameInstance.state, bestMove);
+        setGameState({ ...gameInstance.state });
+      } else {
+        console.log("AI Resigns");
+      }
+    }, 800);
+    return () => clearTimeout(timer);
+  }, [gameState.ply, gameMode, cardSelectionPlayer]);
 
   const handleCardSelect = (card: TrumpCardData) => {
     if (!cardSelectionPlayer) return;
